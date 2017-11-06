@@ -46,17 +46,17 @@ class RelatedTermsEmbedding(RelatedTerms):
 
                     for expandterm in _wordsList[0]:
                         #remove stop words and terms with non-eng chars
-                        if (expandterm==expandterm.encode('ascii', 'ignore')):
+                        #if (expandterm==expandterm.encode('ascii', 'ignore')):
                             #calculate similarity
                             if 'cos' == similarity_method:
                                 if expandterm!=term:
                                     expandterm_simvector=self.get_wordembedding_vector(we_model, expandterm, vector_method)
                                     if (expandterm_simvector is not None) and (len(expandterm_simvector)!=0):
                                         _sim=1-distance.cosine(term_simvector, expandterm_simvector)
-                                        relterms_withweight[0].append(expandterm.encode('ascii', 'ignore'))
+                                        relterms_withweight[0].append(expandterm)#.encode('ascii', 'ignore'))
                                         relterms_withweight[1].append(_sim)
                                 else:
-                                    relterms_withweight[0].append(expandterm.encode('ascii', 'ignore'))
+                                    relterms_withweight[0].append(expandterm)#.encode('ascii', 'ignore'))
                                     relterms_withweight[1].append(1.0)
                             else:
                                 raise Exception('similarity_method unknown!')

@@ -428,12 +428,49 @@ class TextGensimEmbeddingModel(EmbeddingModel):
     def get_vectors_all(self):
         return self.word_vectors.syn0
 
-    def search_neighbors(self, vectors, num_neighbors):
+    def search_neighbors(self, vectors, num_neighbors=200):
         _distsList=[]
         _wordsList=[]
 
         for vector in vectors:
-            tuples=self.word_vectors.similar_by_vector(vector, topn=200)
+            tuples=self.word_vectors.similar_by_vector(vector, topn=num_neighbors)
+            _distsList.append([x[1] for x in tuples])
+            _wordsList.append([x[0] for x in tuples])
+
+        return _distsList, _wordsList
+
+class InMemoryGensimEmbeddingModel(EmbeddingModel):
+
+    def __init__(self, logger):
+        '''
+        Constructor
+        '''
+        self.logger = logger
+
+    def load_model(self, vectors, modelname):
+        self.modelname = modelname
+        #self.folderpath = folderpath
+        self.word_vectors = vectors
+
+    def get_modelname(self):
+        return self.modelname
+
+    def get_vector(self, word):
+        word = utils.to_unicode(word)
+        if word not in self.word_vectors:
+            return None
+
+        return self.word_vectors[word]
+
+    def get_vectors_all(self):
+        return self.word_vectors.syn0
+
+    def search_neighbors(self, vectors, num_neighbors):
+        _distsList = []
+        _wordsList = []
+
+        for vector in vectors:
+            tuples = self.word_vectors.similar_by_vector(vector, topn=200)
             _distsList.append([x[1] for x in tuples])
             _wordsList.append([x[0] for x in tuples])
 
