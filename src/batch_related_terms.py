@@ -1,12 +1,15 @@
 import logging
 from typing import List
 
-from .embeddings.embeddingmodel import TextGensimEmbeddingModel as embedmodel  # TextGensimEmbeddingModel
+from gensim.models import KeyedVectors
+
+from .embeddings.embeddingmodel import InMemoryGensimEmbeddingModel as embedmodel  # TextGensimEmbeddingModel
 from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
 
-def get_batch_result(path:str, terms: List[str]):
+
+def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str]):
     we_model = embedmodel(logging.getLogger())
-    we_model.load_model(path, '')
+    we_model.load_model(vectors, '')
 
     related_terms_embedding = RelatedTermsEmbedding()
 
@@ -30,7 +33,7 @@ def get_batch_result(path:str, terms: List[str]):
     #    print('\n',term,len(related[0]))
     #    for i in range(len(related[0])):
     #        print('\t',related[0][i],'   ',related[1][i])
-#
+    #
     #print("----")
 
     term_relterms_withweight = related_terms_embedding.filter_relatedterms(
