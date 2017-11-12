@@ -7,7 +7,7 @@ from .embeddings.embeddingmodel import InMemoryGensimEmbeddingModel as embedmode
 from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
 
 
-def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str]):
+def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str], filter_value = 0.7):
     we_model = embedmodel(logging.getLogger())
     we_model.load_model(vectors, '')
 
@@ -16,7 +16,6 @@ def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str]):
     similarity_method = 'cos'
     vector_method = 'we'
     filter_method = 'threshold'
-    filter_value = 0.7
 
     #for term in terms:
     #    print(term)
