@@ -3,13 +3,13 @@ from typing import List
 
 from gensim.models import KeyedVectors
 
-from .embeddings.embeddingmodel import InMemoryGensimEmbeddingModel as embedmodel  # TextGensimEmbeddingModel
+from .embeddings.embeddingmodel import GensimEmbeddingModel
 from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
 
 
 def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str], filter_value = 0.7):
-    we_model = embedmodel(logging.getLogger())
-    we_model.load_model(vectors, '')
+    we_model = GensimEmbeddingModel()
+    we_model.load_model_in_memory(vectors, '')
 
     related_terms_embedding = RelatedTermsEmbedding()
 

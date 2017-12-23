@@ -3,7 +3,7 @@ import logging
 
 import json
 from . import parameters as parameters
-from .embeddings.embeddingmodel import TextGensimEmbeddingModel as embedmodel #TextGensimEmbeddingModel
+from .embeddings.embeddingmodel import GensimEmbeddingModel as embedmodel #TextGensimEmbeddingModel
 from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
 
 app = Flask(__name__)
@@ -74,8 +74,8 @@ if __name__ == '__main__':
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
 
-    we_model=embedmodel(logger)
-    we_model.load_model(gensim_w2v_path, '')
+    we_model=embedmodel()
+    we_model.load_model_txt(gensim_w2v_path, '')
 
     default_similarity_method=parameters.params['default_similarity_method']
     default_vector_method=parameters.params['default_vector_method']
