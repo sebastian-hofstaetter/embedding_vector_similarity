@@ -9,7 +9,7 @@ import pdb
 
 from .embeddings.embeddingmodel import GensimEmbeddingModel
 from . import parameters as parameters
-from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
+from .post_filtering.relatedtermsembedding import RelatedTermsEmbedding
 
 #parameters
 gensim_w2v_path=parameters.params['gensim_w2v_path']

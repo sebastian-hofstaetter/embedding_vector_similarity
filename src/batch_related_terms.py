@@ -4,44 +4,32 @@ from typing import List
 from gensim.models import KeyedVectors
 
 from .embeddings.embeddingmodel import GensimEmbeddingModel
-from .relatedterms.relatedtermsembedding import RelatedTermsEmbedding
+from .post_filtering.postfilters import *
 
 
-def get_batch_result_from_kv(vectors:KeyedVectors, terms: List[str], filter_value = 0.7):
-    we_model = GensimEmbeddingModel()
-    we_model.load_model_in_memory(vectors, '')
+def get_batch_result_from_kv(vectors: KeyedVectors, terms: List[str], filter_value=0.7, filter_method = 'threshold'):
 
-    related_terms_embedding = RelatedTermsEmbedding()
+    embedding = GensimEmbeddingModel()
+    embedding.load_model_in_memory(vectors, '')
 
-    similarity_method = 'cos'
-    vector_method = 'we'
-    filter_method = 'threshold'
-
-    #for term in terms:
+    # for term in terms:
     #    print(term)
-    #    print(we_model.search_neighbors([we_model.get_vector(term)], 5))
+    #    print(embedding.search_neighbors([embedding.get_vector(term)], 5))
     #    break
 
-    term_relterms_withweight = related_terms_embedding.get_relatedterms(we_model=we_model,
-                                                                        similarityrepo=None,
-                                                                        terms=terms,
-                                                                        similarity_method=similarity_method,
-                                                                        vector_method=vector_method)
-
-    #for term, related in term_relterms_withweight.items():
+    term_relterms_withweight = embedding.search_neighbors_cosine(terms, 200)
+    # for term, related in term_relterms_withweight.items():
     #    print('\n',term,len(related[0]))
     #    for i in range(len(related[0])):
     #        print('\t',related[0][i],'   ',related[1][i])
     #
-    #print("----")
+    # print("----")
 
-    term_relterms_withweight = related_terms_embedding.filter_relatedterms(
-        term_relterms_withweight=term_relterms_withweight,
-        filter_method=filter_method,
-        filter_value=filter_value)
+    if filter_method == "threshold":
+        term_relterms_withweight = PostFilters.filter_embedding_threshold(term_relterms_withweight, filter_value)
 
-    #for term, related in term_relterms_withweight.items():
-    #    print('\n',term)
+        # for term, related in term_relterms_withweight.items():
+    # print('\n',term)
     #    for i in range(len(related[0])):
     #        print('\t',related[0][i],'   ',related[1][i])
 
