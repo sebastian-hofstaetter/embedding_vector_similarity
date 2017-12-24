@@ -34,3 +34,21 @@ def get_batch_result_from_kv(vectors: KeyedVectors, terms: List[str], filter_val
     #        print('\t',related[0][i],'   ',related[1][i])
 
     return term_relterms_withweight
+
+
+
+def get_batch_result_from_kv_lsi(vectors: KeyedVectors, terms: List[str], lsi_data, embedding_filter_value=0.7, lsi_filter_value=0.7):
+
+    embedding = GensimEmbeddingModel()
+    embedding.load_model_in_memory(vectors, '')
+
+    term_relterms_withweight = embedding.search_neighbors_cosine(terms, 200)
+
+
+    term_relterms_withweight = PostFilters.filter_embedding_threshold_lsi_threshold(term_relterms_withweight,
+                                                                                    embedding,
+                                                                                    embedding_filter_value,
+                                                                                    lsi_data,
+                                                                                    lsi_filter_value)
+
+    return term_relterms_withweight

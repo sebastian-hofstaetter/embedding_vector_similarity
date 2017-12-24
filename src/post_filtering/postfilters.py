@@ -4,6 +4,28 @@
 class PostFilters:
 
     @staticmethod
+    def filter_embedding_threshold_lsi_threshold(term_relterms_withweight, embedding, embedding_filter_value, lsi_data, lsi_filter_value):
+        _term_relterms_withweight = {}
+        for term in list(term_relterms_withweight.keys()):
+            _term_relterms_withweight[term] = [[], []]
+            for value_i, value in enumerate(term_relterms_withweight[term][1]):
+                sim_term = term_relterms_withweight[term][0][value_i]
+
+                t_id = embedding.get_id_from_word(term)
+                t_sim_id = embedding.get_id_from_word(sim_term)
+                lsi_sim = 1
+
+                for id, sim in lsi_data[t_id]:
+                    if id == t_sim_id:
+                        lsi_sim = sim
+                        break
+
+                if value >= embedding_filter_value and lsi_sim > lsi_filter_value:
+                    _term_relterms_withweight[term][0].append(sim_term)
+                    _term_relterms_withweight[term][1].append(value)
+        return _term_relterms_withweight
+
+    @staticmethod
     def filter_embedding_threshold(term_relterms_withweight, filter_value):
         _term_relterms_withweight = {}
         for term in list(term_relterms_withweight.keys()):

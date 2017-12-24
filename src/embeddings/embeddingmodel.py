@@ -21,6 +21,13 @@ class GensimEmbeddingModel:
     def get_modelname(self):
         return self.model_name
 
+    def get_id_from_word(self, word):
+        word = utils.to_unicode(word)
+        if word not in self.word_vectors:
+            return -1
+
+        return self.word_vectors.vocab[word].index
+
     def get_vector(self, word):
         word = utils.to_unicode(word)
         if word not in self.word_vectors:
@@ -60,7 +67,7 @@ class GensimEmbeddingModel:
 
                 for expandterm in _wordsList[0]:
                     if expandterm is not None and expandterm != term:
-                        _sim = 1 - distance.cosine(term_vector, expandterm)
+                        _sim = 1 - distance.cosine(term_vector, self.get_vector(expandterm))
                         relterms_with_weight[0].append(expandterm)
                         relterms_with_weight[1].append(_sim)
 
