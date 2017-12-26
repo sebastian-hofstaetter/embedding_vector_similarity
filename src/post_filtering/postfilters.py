@@ -15,10 +15,11 @@ class PostFilters:
                 t_sim_id = embedding.get_id_from_word(sim_term)
                 lsi_sim = 1
 
-                for id, sim in lsi_data[t_id]:
-                    if id == t_sim_id:
-                        lsi_sim = sim
-                        break
+                if lsi_data[t_id] is not None:
+                    for id, sim in lsi_data[t_id]:
+                       if id == t_sim_id:
+                          lsi_sim = sim
+                          break
 
                 if value >= embedding_filter_value and lsi_sim > lsi_filter_value:
                     _term_relterms_withweight[term][0].append(sim_term)
