@@ -5,26 +5,33 @@ class PostFilters:
 
     @staticmethod
     def filter_embedding_threshold_lsi_threshold(term_relterms_withweight, embedding, embedding_filter_value, lsi_data, lsi_filter_value):
-        _term_relterms_withweight = {}
+        result = {}
+
+        # main term
         for term in list(term_relterms_withweight.keys()):
-            _term_relterms_withweight[term] = [[], []]
+            result[term] = [[], []]
+
+            # similar terms
             for value_i, value in enumerate(term_relterms_withweight[term][1]):
                 sim_term = term_relterms_withweight[term][0][value_i]
 
                 t_id = embedding.get_id_from_word(term)
                 t_sim_id = embedding.get_id_from_word(sim_term)
-                lsi_sim = 1
 
+                # find lsi sim (if available)
+                lsi_sim = 0 # ignore word, if its not in lsi data
                 if lsi_data[t_id] is not None:
                     for id, sim in lsi_data[t_id]:
                        if id == t_sim_id:
                           lsi_sim = sim
                           break
 
-                if value >= embedding_filter_value and lsi_sim > lsi_filter_value:
-                    _term_relterms_withweight[term][0].append(sim_term)
-                    _term_relterms_withweight[term][1].append(value)
-        return _term_relterms_withweight
+                # compare w2v threshold + lsi threshold
+                if value >= embedding_filter_value and lsi_sim >= lsi_filter_value:
+                    result[term][0].append(sim_term)
+                    result[term][1].append(value)
+
+        return result
 
     @staticmethod
     def filter_embedding_threshold(term_relterms_withweight, filter_value):
