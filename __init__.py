@@ -1,1 +1,1 @@
-__author__ = 'navid'
+__author__ = ''

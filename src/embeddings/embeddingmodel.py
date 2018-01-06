@@ -2,7 +2,6 @@ from gensim import utils
 from gensim.models import KeyedVectors
 from scipy.spatial import distance
 
-
 #
 # Wraps a gensim word2vec model with convenient methods to call
 #

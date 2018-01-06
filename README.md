@@ -1,28 +1,28 @@
-# Word embedding - vector similarity
+# Word Embedding - Vector Similarity
 
 **Based on: https://github.com/neds/similarityAPI**
  
 Changed to Python 3, added more models and refactored code to be usable from other Python code. 
 
-REST api interface for term similarity based on various models
+---
 
-# Getting similar terms from REST API
+**REST API and library for term similarity based on various models**
 
-## Running the API server
-(1) Copy parameters.py.template to parameters.py and setup the parameters. The essential parameter is gensim_w2v_path, the path to the folder of the gensim word embedding model
-(2) run runrestapi.py
+# Getting similar terms
 
-## Fecthing similar terms
-### Quick start:
-Example:
-curl -H "Content-Type: application/json" -X POST -d '{"terms":["book","librari"]}' http://127.0.0.1:5000/api/v1.0/relatedterms
+## (1) Running the API server
 
-### Detailed POST parameter
-terms : a list of query terms
-similarity_method : 'cos' (optional)
-vector_method : 'we'/'weexpsg'/'werexpsg'/'weprexpsg'  (optional)
-filter_method : 'threshold','count'  (optional)
-filter_method : a float value  (optional)
+Call runrestapi.py with all needed parameters defined in runrestapi.py and make sure that PYTHONPATH is set to the outer folder of this main folder.
+The embedding must be in word2vec text format - but with minimal code changes other formats that are supported by gensim can be used as well.
 
-Example:
-curl -H "Content-Type: application/json" -X POST -d '{"terms":["book","librari"],"vector_method":"we","similarity_method":"cos","filter_method":"threshold","filter_value":"0.7"}' http://127.0.0.1:5000/api/v1.0/relatedterms
+
+Once the API is running call: /api/v1.0/post_filtering 
+
+````
+curl -H "Content-Type: application/json" -X GET -d '{"terms":["book","librari"]}' http://127.0.0.1:5000/api/v1.0/post_filtering
+````
+
+## (2) Or: use as a library
+
+Call one of the methods defined in batch_related_terms.py to call this api from python code. Here an already loaded gensim model is needed.
+See the file for more information.
